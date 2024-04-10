@@ -4,7 +4,9 @@ import { createObjectCsvWriter as createCsvWriter } from 'csv-writer';
 
 // Function to extract domain from email
 function extractDomain(email) {
+  if (email) {
   return email.split('@')[1];
+  }
 }
 
 // Function to process emails and write unique domains to a new CSV
@@ -13,9 +15,9 @@ async function processEmails(inputFilePath, outputFilePath) {
   const readStream = fs.createReadStream(inputFilePath);
 
   readStream
-    .pipe(csvParser(['Email']))
+    .pipe(csvParser(['email']))
     .on('data', (row) => {
-      const domain = extractDomain(row.Email);
+      const domain = extractDomain(row.email);
       uniqueDomains.add(domain);
     })
     .on('end', () => {
@@ -33,7 +35,7 @@ async function processEmails(inputFilePath, outputFilePath) {
 }
 
 // Specify your input and output file paths
-const inputFilePath = './invalid-emails.csv';
-const outputFilePath = './invalid-domains.csv';
+const inputFilePath = './emails.csv';
+const outputFilePath = './unique-domains.csv';
 
 processEmails(inputFilePath, outputFilePath);
